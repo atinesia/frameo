@@ -23,7 +23,7 @@ class WatermarkSettingComponent extends Component
             $this->position = $setting->position ?? 'center';
             $this->opacity = $setting->opacity ?? 50;
             $this->scale = $setting->scale ?? 20;
-            $this->current_image = $setting->image_path;
+            $this->current_image = $setting->logo_path;
         }
     }
 
@@ -40,7 +40,7 @@ class WatermarkSettingComponent extends Component
 
         if ($this->watermark_image) {
             $path = $this->watermark_image->store('watermarks', 'public');
-            $setting->image_path = $path;
+            $setting->logo_path = $path;
         }
 
         $setting->position = $this->position;

@@ -12,6 +12,7 @@ class Photo extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
     protected $fillable = [
         'album_id', 'code', 'original_path', 'watermark_path',
         'thumbnail_path', 'price', 'file_size', 'original_extension',

@@ -26,6 +26,7 @@ class PhotoUploadComponent extends Component
 
         foreach ($this->photos as $photoFile) {
             $data = $photoService->processAndSavePhoto($photoFile, $this->album_id, $this->default_price);
+            //dd($data);
             Photo::create($data);
         }
 

@@ -3,6 +3,8 @@
 use App\Livewire\Admin\AlbumManager;
 use App\Livewire\Admin\PhotoUploadComponent;
 use App\Livewire\Admin\WatermarkSettingComponent;
+use App\Livewire\Public\GalleryComponent;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,16 +13,26 @@ Route::get('/', function () {
 
 /*
 |--------------------------------------------------------------------------
-| Admin Routes (Protected with Auth & Role Middleware)
+| Dashboard Redirect Logic
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+Route::get('/dashboard', function () {
+    if (Auth::user()->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->route('home');
+})->middleware(['auth'])->name('dashboard');
 
-    // Admin Dashboard Main View
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+Route::get('/', GalleryComponent::class)->name('home');
+/*
+|--------------------------------------------------------------------------
+| Admin Protected Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
+    // Menjadikan AlbumManager sebagai Dashboard Admin Utama
+    Route::get('/dashboard', AlbumManager::class)->name('dashboard');
     // CRUD Album
     Route::get('/albums', AlbumManager::class)->name('albums');
 
@@ -29,9 +41,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
     // Watermark Setting
     Route::get('/watermark', WatermarkSettingComponent::class)->name('watermark');
-
-    // Route Transaksi/Pesanan (Persiapan Modul Selanjutnya)
-    Route::get('/orders', function () {
-        return view('admin.orders.index');
-    })->name('orders');
 });
+
+require __DIR__ . '/auth.php';

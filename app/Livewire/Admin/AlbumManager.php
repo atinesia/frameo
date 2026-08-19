@@ -63,7 +63,7 @@ class AlbumManager extends Component
             'title' => $this->title,
             'slug' => Str::slug($this->title) . '-' . time(),
             'description' => $this->description,
-            'cover_image' => $coverPath,
+            'cover_photo' => $coverPath,
         ]);
 
         session()->flash('message', 'Album berhasil dibuat!');
@@ -79,7 +79,7 @@ class AlbumManager extends Component
         $this->album_id = $album->id;
         $this->title = $album->title;
         $this->description = $album->description;
-        $this->existing_cover = $album->cover_image;
+        $this->existing_cover = $album->cover_photo;
         $this->isEditMode = true;
     }
 
@@ -101,7 +101,7 @@ class AlbumManager extends Component
             'title' => $this->title,
             'slug' => Str::slug($this->title) . '-' . time(),
             'description' => $this->description,
-            'cover_image' => $coverPath,
+            'cover_photo' => $coverPath,
         ]);
 
         session()->flash('message', 'Album berhasil diperbarui!');

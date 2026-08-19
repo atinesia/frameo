@@ -75,11 +75,24 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('admin.orders') ? 'active' : '' }}"
-                            href="{{ route('admin.orders') }}">
+                            href="#">
                             <i class="bi bi-bag-check me-2"></i>Transaksi / Pesanan
                         </a>
                     </li>
                 </ul>
+                <div class="mt-auto pt-4 border-top border-secondary border-opacity-25">
+                    <div class="d-flex align-items-center justify-content-between text-white mb-3">
+                        <div class="small fw-semibold">
+                            <i class="bi bi-person-circle me-1"></i> {{ auth()->user()->name }}
+                        </div>
+                    </div>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger w-100 btn-sm fw-semibold">
+                            <i class="bi bi-box-arrow-right me-2"></i>Keluar / Logout
+                        </button>
+                    </form>
+                </div>
             </nav>
 
             <!-- Content -->

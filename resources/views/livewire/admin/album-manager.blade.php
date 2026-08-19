@@ -36,8 +36,8 @@
             <div class="col-md-6 col-lg-3">
                 <div class="card h-100 overflow-hidden shadow-sm">
                     <div class="position-relative" style="height: 180px; background-color: #0f172a;">
-                        @if ($album->cover_image)
-                            <img src="{{ asset('storage/' . $album->cover_image) }}"
+                        @if ($album->cover_photo)
+                            <img src="{{ asset('storage/' . $album->cover_photo) }}"
                                 class="w-100 h-100 object-fit-cover" alt="{{ $album->title }}">
                         @else
                             <div class="w-100 h-100 d-flex align-items-center justify-content-center text-secondary">

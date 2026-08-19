@@ -7,7 +7,7 @@
     </div>
 
     @if (session()->has('message'))
-        <div class="alert alert-success alert-dismissible fade show border-0 bg-success bg-opacity-20 text-success mb-4"
+        <div class="alert alert-success alert-dismissible fade show border-0 bg-success bg-opacity-20  mb-4"
             role="alert">
             <i class="bi bi-check-circle me-2"></i>{{ session('message') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

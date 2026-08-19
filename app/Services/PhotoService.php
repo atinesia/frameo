@@ -20,7 +20,7 @@ class PhotoService
     {
         $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-        // 1. Simpan Foto Asli ke Private Storage (aman tidak bisa diakses publik)
+        // 1. Simpan Foto Asli ke Private Storage
         Storage::disk('local')->putFileAs('private/photos', $file, $filename);
         $originalPath = 'private/photos/' . $filename;
 
@@ -35,7 +35,11 @@ class PhotoService
             $wmWidth = intval($image->width() * ($wmSetting->scale / 100));
             $watermark->scale(width: $wmWidth);
 
-            // Posisi Intervention Image v3
+            // PERBAIKAN V3: Terapkan opacity langsung pada objek watermark (nilai 0.0 - 1.0)
+            $opacityValue = floatval(($wmSetting->opacity ?? 50) / 100);
+            $watermark->opacity($opacityValue);
+
+            // Pemetaan Posisi
             $position = match ($wmSetting->position) {
                 'top-left' => 'top-left',
                 'top-right' => 'top-right',
@@ -44,13 +48,12 @@ class PhotoService
                 default => 'center',
             };
 
-            // Tempel Watermark dengan Opacity
+            // Tempel Watermark (tanpa parameter opacity di method place)
             $image->place(
                 element: $watermark,
                 position: $position,
-                offset_x: 10,
-                offset_y: 10,
-                opacity: $wmSetting->opacity
+                offset_x: 15,
+                offset_y: 15
             );
         }
 
@@ -63,8 +66,9 @@ class PhotoService
             'album_id' => $albumId,
             'filename' => $filename,
             'original_path' => $originalPath,
-            'watermarked_path' => $watermarkedPath,
+            'watermark_path' => $watermarkedPath,
             'price' => $price,
+            'code' => uniqid('photo_'),
         ];
     }
 }
