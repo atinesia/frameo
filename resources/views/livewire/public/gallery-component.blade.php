@@ -25,6 +25,25 @@
         </div>
     </div>
 
+    @if ($activeBundle)
+        <div class="card bg-primary bg-opacity-10 border-primary p-4 mb-5 text-white">
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+                <div>
+                    <span class="badge bg-primary text-uppercase mb-2">Penawaran Hemat</span>
+                    <h4 class="fw-bold mb-1">{{ $activeBundle->name }}</h4>
+                    <p class="text-secondary small mb-0">Dapatkan seluruh foto resolusi tinggi di dalam album ini
+                        sekaligus tanpa watermark!</p>
+                </div>
+                <div class="text-md-end">
+                    <h3 class="fw-bold text-primary mb-2">Rp {{ number_format($activeBundle->price, 0, ',', '.') }}</h3>
+                    <a href="{{ route('checkout.bundle', $activeBundle->id) }}" class="btn btn-primary fw-bold px-4">
+                        <i class="bi bi-box-seam me-2"></i>Beli Seluruh Album
+                    </a>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <!-- Photo Grid (Protected) -->
     <div class="row g-4">
         @forelse($photos as $photo)
@@ -76,7 +95,8 @@
                                 class="object-fit-contain user-select-none" style="pointer-events: none;"
                                 oncontextmenu="return false;" alt="Preview">
                         </div>
-                        <h4 class="text-primary fw-bold mb-2">Rp {{ number_format($selectedPhoto->price, 0, ',', '.') }}
+                        <h4 class="text-primary fw-bold mb-2">Rp
+                            {{ number_format($selectedPhoto->price, 0, ',', '.') }}
                         </h4>
                         <p class="text-secondary small mb-0">Album: {{ $selectedPhoto->album->title }}</p>
                         <p class="text-secondary small">File asli beresolusi tinggi tanpa watermark akan dikirim

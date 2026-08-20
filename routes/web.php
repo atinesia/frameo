@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\PhotoDownloadController;
 use App\Livewire\Admin\AlbumManager;
+use App\Livewire\Admin\BundleManager;
 use App\Livewire\Admin\DashboardComponent;
 use App\Livewire\Admin\PhotoUploadComponent;
 use App\Livewire\Admin\WatermarkSettingComponent;
+use App\Livewire\Public\CheckoutBundleComponent;
 use App\Livewire\Public\CheckoutComponent;
 use App\Livewire\Public\CheckoutSuccessComponent;
 use App\Livewire\Public\GalleryComponent;
@@ -38,6 +40,9 @@ Route::get('/download/photo/{order}', [PhotoDownloadController::class, 'download
 Route::get('/checkout/success/{order_number}', CheckoutSuccessComponent::class)
     ->name('checkout.success');
 
+Route::get('/checkout/bundle/{bundleId}', CheckoutBundleComponent::class)
+    ->name('checkout.bundle');
+
 /*
 |--------------------------------------------------------------------------
 | Admin Protected Routes
@@ -54,6 +59,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Watermark Setting
     Route::get('/watermark', WatermarkSettingComponent::class)->name('watermark');
+
+    Route::get('/bundles', BundleManager::class)->name('bundles');
 });
 
 require __DIR__ . '/auth.php';

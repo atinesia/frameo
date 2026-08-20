@@ -54,7 +54,15 @@ class GalleryComponent extends Component
         $photos = $query->latest()->paginate(12);
         $albums = Album::latest()->get();
 
-        return view('livewire.public.gallery-component', compact('photos', 'albums'))
+        // Cari bundle aktif berdasarkan album_id yang dipilih
+        $activeBundle = null;
+        if ($this->album_id) {
+            $activeBundle = \App\Models\Bundle::where('album_id', $this->album_id)
+                ->where('is_active', true)
+                ->first();
+        }
+
+        return view('livewire.public.gallery-component', compact('photos', 'albums', 'activeBundle'))
             ->layout('layouts.app');
     }
 }

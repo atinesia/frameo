@@ -74,6 +74,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('admin.bundles') ? 'active' : '' }}"
+                            href="{{ route('admin.bundles') }}">
+                            <i class="bi bi-box-seam me-2"></i>Paket Bundle
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('admin.orders') ? 'active' : '' }}" href="#">
                             <i class="bi bi-bag-check me-2"></i>Transaksi / Pesanan
                         </a>
