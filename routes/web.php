@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PhotoDownloadController;
 use App\Livewire\Admin\AlbumManager;
+use App\Livewire\Admin\DashboardComponent;
 use App\Livewire\Admin\PhotoUploadComponent;
 use App\Livewire\Admin\WatermarkSettingComponent;
 use App\Livewire\Public\CheckoutComponent;
@@ -43,9 +44,8 @@ Route::get('/checkout/success/{order_number}', CheckoutSuccessComponent::class)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-
-    // Menjadikan AlbumManager sebagai Dashboard Admin Utama
-    Route::get('/dashboard', AlbumManager::class)->name('dashboard');
+    // Dashboard Admin Utama
+    Route::get('/dashboard', DashboardComponent::class)->name('dashboard');
     // CRUD Album
     Route::get('/albums', AlbumManager::class)->name('albums');
 

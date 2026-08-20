@@ -74,8 +74,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.orders') ? 'active' : '' }}"
-                            href="#">
+                        <a class="nav-link {{ request()->routeIs('admin.orders') ? 'active' : '' }}" href="#">
                             <i class="bi bi-bag-check me-2"></i>Transaksi / Pesanan
                         </a>
                     </li>
