@@ -28,16 +28,19 @@ class PhotoService
         $wmSetting = WatermarkSetting::first();
         $image = $this->manager->read($file->getRealPath());
 
-        if ($wmSetting && $wmSetting->image_path && Storage::disk('public')->exists($wmSetting->image_path)) {
-            $watermark = $this->manager->read(Storage::disk('public')->path($wmSetting->image_path));
+        if ($wmSetting && $wmSetting->logo_path && Storage::disk('public')->exists($wmSetting->logo_path)) {
+            $watermarkPath = Storage::disk('public')->path($wmSetting->logo_path);
 
-            // Hitung lebar watermark berdasarkan skala (%)
+            // Baca watermark & ubah ukurannya
+            $watermark = $this->manager->read($watermarkPath);
             $wmWidth = intval($image->width() * ($wmSetting->scale / 100));
             $watermark->scale(width: $wmWidth);
 
-            // PERBAIKAN V3: Terapkan opacity langsung pada objek watermark (nilai 0.0 - 1.0)
-            $opacityValue = floatval(($wmSetting->opacity ?? 50) / 100);
-            $watermark->opacity($opacityValue);
+            // MANIPULASI OPACITY VIA GD RESOURCE
+            $opacity = intval($wmSetting->opacity ?? 50); // Nilai 1 - 100
+            if ($opacity < 100) {
+                $watermark = $this->applyOpacityGd($watermark, $opacity);
+            }
 
             // Pemetaan Posisi
             $position = match ($wmSetting->position) {
@@ -48,7 +51,7 @@ class PhotoService
                 default => 'center',
             };
 
-            // Tempel Watermark (tanpa parameter opacity di method place)
+            // Tempel Watermark yang sudah transparan
             $image->place(
                 element: $watermark,
                 position: $position,
@@ -70,5 +73,57 @@ class PhotoService
             'price' => $price,
             'code' => uniqid('photo_'),
         ];
+    }
+
+    /**
+     * Helper untuk menerapkan opacity pada objek Intervention Image v3 (GD Driver)
+     */
+    private function applyOpacityGd($imageInstance, $opacity)
+    {
+        // Encode sementara ke PNG untuk ambil GD resource
+        $pngData = (string) $imageInstance->toPng();
+        $src = imagecreatefromstring($pngData);
+
+        $width = imagesx($src);
+        $height = imagesy($src);
+
+        // Buat canvas transparan baru
+        $dst = imagecreatetruecolor($width, $height);
+        imagealphablending($dst, false);
+        imagesavealpha($dst, true);
+
+        $transparent = imagecolorallocatealpha($dst, 0, 0, 0, 127);
+        imagefilledrectangle($dst, 0, 0, $width, $height, $transparent);
+
+        // Hitung rasio opacity (0 - 1)
+        $pct = $opacity / 100;
+
+        // Loop setiap piksel untuk atur alpha channel
+        for ($x = 0; $x < $width; $x++) {
+            for ($y = 0; $y < $height; $y++) {
+                $color = imagecolorat($src, $x, $y);
+                $alpha = ($color >> 24) & 0x7F;
+
+                // Terapkan opacity baru ke piksel
+                $newAlpha = 127 - intval((127 - $alpha) * $pct);
+
+                $r = ($color >> 16) & 0xFF;
+                $g = ($color >> 8) & 0xFF;
+                $b = $color & 0xFF;
+
+                $newColor = imagecolorallocatealpha($dst, $r, $g, $b, $newAlpha);
+                imagesetpixel($dst, $x, $y, $newColor);
+            }
+        }
+
+        // Simpan hasil ke output buffer & re-read ke Intervention Image
+        ob_start();
+        imagepng($dst);
+        $resultData = ob_get_clean();
+
+        imagedestroy($src);
+        imagedestroy($dst);
+
+        return $this->manager->read($resultData);
     }
 }
