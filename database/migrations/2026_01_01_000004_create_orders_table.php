@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('subtotal', 12, 2);
             $table->decimal('unique_code', 12, 2)->default(0); // kode unik tambahan biar mudah rekonsiliasi manual jika perlu
             $table->decimal('total_amount', 12, 2);
-            $table->enum('status', ['pending', 'paid', 'expired', 'failed', 'delivered'])
+            $table->enum('status', ['unpaid','pending', 'paid', 'expired', 'failed', 'delivered'])
                   ->default('pending');
             $table->string('payment_method')->nullable(); // QRIS, BRIVA, dll dari Tripay
             $table->string('tripay_reference')->nullable(); // reference dari Tripay

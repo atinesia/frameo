@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\PhotoDownloadController;
 use App\Livewire\Admin\AlbumManager;
 use App\Livewire\Admin\PhotoUploadComponent;
 use App\Livewire\Admin\WatermarkSettingComponent;
+use App\Livewire\Public\CheckoutComponent;
+use App\Livewire\Public\CheckoutSuccessComponent;
 use App\Livewire\Public\GalleryComponent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +27,16 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::get('/', GalleryComponent::class)->name('home');
+
+Route::get('/checkout/{photoId}', CheckoutComponent::class)->name('checkout');
+
+// Secure Signed Route untuk Unduh Foto Asli
+Route::get('/download/photo/{order}', [PhotoDownloadController::class, 'download'])
+    ->name('photo.download');
+
+Route::get('/checkout/success/{order_number}', CheckoutSuccessComponent::class)
+    ->name('checkout.success');
+
 /*
 |--------------------------------------------------------------------------
 | Admin Protected Routes

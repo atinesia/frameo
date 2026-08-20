@@ -72,7 +72,7 @@
                     </div>
                     <div class="modal-body text-center">
                         <div class="mb-3 ratio ratio-16x9 bg-black rounded overflow-hidden">
-                            <img src="{{ asset('storage/' . $selectedPhoto->watermarked_path) }}"
+                            <img src="{{ asset('storage/' . $selectedPhoto->watermark_path) }}"
                                 class="object-fit-contain user-select-none" style="pointer-events: none;"
                                 oncontextmenu="return false;" alt="Preview">
                         </div>
@@ -84,9 +84,10 @@
                     </div>
                     <div class="modal-footer border-secondary">
                         <button type="button" class="btn btn-secondary px-4" wire:click="closeModal">Batal</button>
-                        <button type="button" class="btn btn-success px-4 fw-bold">
-                            <i class="bi bi-credit-card me-2"></i>Lanjut ke Tripay Checkout
-                        </button>
+                        <!-- Pada Modal Detail Pembelian / Card Foto -->
+                        <a href="{{ route('checkout', $selectedPhoto->id) }}" class="btn btn-success px-4 fw-bold">
+                            <i class="bi bi-credit-card me-2"></i>Lanjut ke Pembayaran
+                        </a>
                     </div>
                 </div>
             </div>
